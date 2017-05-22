@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style type="text/css">
+        #lottery {
+            background: url("images/disc-bg.gif?v=79804") no-repeat 0 0;
+            height: 450px;
+            width: 450px;
+            position: absolute;
+            left: 459px;
+            top: 93px;
+        }
+
+        #lottery .arrow {
+            background: url("images/arrow.png?v=1bde2") no-repeat 0 0;
+            height: 191px;
+            left: 207px;
+            position: absolute;
+            top: 91px;
+            width: 32px;
+        }
+
+        #lottery .lot-btn {
+            height: 92px;
+            left: 177px;
+            overflow: hidden;
+            position: absolute;
+            top: 181px;
+            width: 91px;
+        }
+
+        #lottery .lot-btn span {
+            cursor: pointer;
+            display: block;
+            height: 92px;
+            position: relative;
+            width: 91px;
+        }
+
+        #lottery .first span {
+            background: url("images/buttons_01.png?v=8bc8e") no-repeat 0 0;
+        }
+
+        #lottery .zhuanpan {
+            position: absolute;
+            left: 47px;
+            top: 47px;
+            width: 352px;
+            height: 352px;
+            transition: transform 5s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+<div id="lottery">
+    <img class="zhuanpan J-zhuanpan" src="images/disc-rotate.gif"/>
+    <div class="arrow"></div>
+    <div class="lot-btn J-lot-btn first"><span></span></div>
+</div>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript">
+
+    $(function () {
+
+        function Lottery(opts) {
+            this.init(opts)
+        }
+
+        Lottery.prototype = {
+            endIndex: 0,
+            isAnimate: false,
+            init: function (opts) {
+                var _this = this;
+                _this.$target = opts.$target;//获取父节点
+                _this.$zhuanPan = _this.$target.find('.J-zhuanpan');//获取img的class
+                _this.$btn = _this.$target.find('.J-lot-btn');//获取按钮的class
+
+                _this.endIndex = opts.endIndex || _this.endIndex;
+                _this.lastRotate = 0;
+
+                _this.bindEvent();
+            },
+            bindEvent: function () {
+                var _this = this;
+                _this.$btn.click(function () {
+                    _this.go();
+                })
+            },
+            setGift: function (endIndex) {
+                var _this = this;
+                _this.endIndex = endIndex;
+            },
+            go: function () {
+                var _this = this;
+
+                if(_this.isAnimate) {
+                    return;
+                }
+                _this.isAnimate = true;
+
+                var quanshu = 2;
+                var aaaa = 360 * quanshu + 360 / 7 * _this.endIndex + 360 / 7 / 2;
+
+                var newRotate = _this.lastRotate + aaaa - _this.lastRotate % 360;
+
+                _this.lastRotate = newRotate;
+
+                _this.$zhuanPan.css('transition-duration', '2s');
+                _this.$zhuanPan.css('transform', 'rotate(' + newRotate + 'deg)');
+                setTimeout(function () {
+                    _this.isAnimate = false;
+                }, 2000);
+
+            }
+
+        };
+
+        var lottery = new Lottery({
+            $target: $('#lottery'),
+            endIndex: 1
+        });
+
+        window.lottery = lottery;
+
+    })
+
+
+</script>
+</body>
+</html>
